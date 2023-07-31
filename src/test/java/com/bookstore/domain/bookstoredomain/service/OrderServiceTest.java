@@ -1,4 +1,4 @@
-package com.example.domain.bookstoredomain.service;
+package com.bookstore.domain.bookstoredomain.service;
 
 import static com.bookstore.domain.bookstoredomain.common.Constants.PERSISTENCE_BASE_URL;
 import static org.junit.Assert.assertNotNull;
