@@ -68,26 +68,26 @@ public class BookServiceTest {
 		assertEquals("Book 1", result.get(0).getTitle());
 		assertEquals("Book 2", result.get(1).getTitle());
 	}
-	
+
 	@Test
 	public void testGetAllBooksEmptyList() {
-	    // Prepare an empty mock response from the persistence microservice
-	    List<Book> mockBooks = new ArrayList<>();
-	    ResponseEntity<List<Book>> responseEntity = new ResponseEntity<>(mockBooks, HttpStatus.OK);
+		// Prepare an empty mock response from the persistence microservice
+		List<Book> mockBooks = new ArrayList<>();
+		ResponseEntity<List<Book>> responseEntity = new ResponseEntity<>(mockBooks, HttpStatus.OK);
 
-	    // Mock the HTTP request to the persistence microservice
-	    when(restTemplate.exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.GET), any(),
-	            eq(new ParameterizedTypeReference<List<Book>>() {
-	            }))).thenReturn(responseEntity);
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.GET), any(),
+				eq(new ParameterizedTypeReference<List<Book>>() {
+				}))).thenReturn(responseEntity);
 
-	    // Call the book service method
-	    List<Book> result = bookService.getAllBooks();
+		// Call the book service method
+		List<Book> result = bookService.getAllBooks();
 
-	    // Assert the result
-	    assertNotNull(result);
-	    assertEquals(0, result.size());
+		// Assert the result
+		assertNotNull(result);
+		assertEquals(0, result.size());
 	}
-	
+
 	@Test
 	public void testGetBookById() {
 		// Prepare the mock response from the persistence microservice
@@ -107,21 +107,21 @@ public class BookServiceTest {
 		assertEquals("Book 1", result.getTitle());
 		assertEquals("Author 1", result.getAuthor());
 	}
-	
+
 	@Test
 	public void testGetNonExistentBookById() {
-	    // Prepare the mock response from the persistence microservice
-	    ResponseEntity<Book> responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		// Prepare the mock response from the persistence microservice
+		ResponseEntity<Book> responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-	    // Mock the HTTP request to the persistence microservice
-	    when(restTemplate.exchange(eq(persistenceBaseUrl + "/books/100"), eq(HttpMethod.GET), any(), eq(Book.class)))
-	        .thenReturn(responseEntity);
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/books/100"), eq(HttpMethod.GET), any(), eq(Book.class)))
+				.thenReturn(responseEntity);
 
-	    // Call the book service method with a non-existent book ID
-	    Book result = bookService.getBookById(100L);
+		// Call the book service method with a non-existent book ID
+		Book result = bookService.getBookById(100L);
 
-	    // Assert the result
-	    assertNull(result);
+		// Assert the result
+		assertNull(result);
 	}
 
 	@Test
@@ -147,41 +147,39 @@ public class BookServiceTest {
 		verify(restTemplate, times(1)).exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.POST),
 				any(HttpEntity.class), eq(Book.class));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testAddNullBook() {
-	    // Test with a null book object
-	    Book newBook = null;
+		// Test with a null book object
+		Book newBook = null;
 
-	    assertThrows(ValidationException.class, () -> bookService.addBook(newBook));
-	    verify(restTemplate, never()).exchange(any(), any(HttpMethod.class), any(), any(Class.class));
+		assertThrows(ValidationException.class, () -> bookService.addBook(newBook));
+		verify(restTemplate, never()).exchange(any(), any(HttpMethod.class), any(), any(Class.class));
 	}
 
-	
 	@Test
 	public void testAddBookWithMaxPrice() {
-	    // Test with a book having the maximum allowed price
-	    double maxPrice = Double.MAX_VALUE;
-	    Book newBook = new Book(null, "Title", "Author", maxPrice);
+		// Test with a book having the maximum allowed price
+		double maxPrice = Double.MAX_VALUE;
+		Book newBook = new Book(null, "Title", "Author", maxPrice);
 
-	    // Prepare the mock response from the persistence microservice
-	    Book createdBook = new Book(1L, "Title", "Author", maxPrice);
-	    ResponseEntity<Book> responseEntity = new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+		// Prepare the mock response from the persistence microservice
+		Book createdBook = new Book(1L, "Title", "Author", maxPrice);
+		ResponseEntity<Book> responseEntity = new ResponseEntity<>(createdBook, HttpStatus.CREATED);
 
-	    // Mock the HTTP request to the persistence microservice
-	    when(restTemplate.exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.POST), any(HttpEntity.class),
-	            eq(Book.class))).thenReturn(responseEntity);
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.POST), any(HttpEntity.class),
+				eq(Book.class))).thenReturn(responseEntity);
 
-	    // Call the book service method
-	    Book result = bookService.addBook(newBook);
+		// Call the book service method
+		Book result = bookService.addBook(newBook);
 
-	    // Assert the result
-	    assertEquals(createdBook, result);
-	    verify(restTemplate, times(1)).exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.POST),
-	            any(HttpEntity.class), eq(Book.class));
+		// Assert the result
+		assertEquals(createdBook, result);
+		verify(restTemplate, times(1)).exchange(eq(persistenceBaseUrl + "/books"), eq(HttpMethod.POST),
+				any(HttpEntity.class), eq(Book.class));
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Test

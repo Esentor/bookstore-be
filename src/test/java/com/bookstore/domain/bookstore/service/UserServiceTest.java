@@ -27,121 +27,146 @@ import com.bookstore.domain.bookstore.model.User;
 
 public class UserServiceTest {
 
-    private final String persistenceBaseUrl = Constants.PERSISTENCE_BASE_URL;
+	private final String persistenceBaseUrl = Constants.PERSISTENCE_BASE_URL;
 
-    private RestTemplate restTemplate;
-    private UserService userService;
+	private RestTemplate restTemplate;
+	private UserService userService;
 
-    @BeforeEach
-    public void setUp() {
-        restTemplate = mock(RestTemplate.class);
-        userService = new UserService(restTemplate);
-    }
+	@BeforeEach
+	public void setUp() {
+		restTemplate = mock(RestTemplate.class);
+		userService = new UserService(restTemplate);
+	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Test
-    public void testGetAllUsers() {
-        // Prepare the mock response from the persistence microservice
-        List<User> mockUsers = new ArrayList<>();
-        mockUsers.add(new User(1L, "User 1", "mail@mail.com"));
-        mockUsers.add(new User(2L, "User 2", "mail@mail.com"));
+	public void testGetAllUsers() {
+		// Prepare the mock response from the persistence microservice
+		List<User> mockUsers = new ArrayList<>();
+		mockUsers.add(new User(1L, "User 1", "mail@mail.com"));
+		mockUsers.add(new User(2L, "User 2", "mail@mail.com"));
 
-        ResponseEntity<List<User>> responseEntity = new ResponseEntity<>(mockUsers, HttpStatus.OK);
+		ResponseEntity<List<User>> responseEntity = new ResponseEntity<>(mockUsers, HttpStatus.OK);
 
-        // Mock the HTTP request to the persistence microservice
-        when(restTemplate.exchange(
-                eq(persistenceBaseUrl + "/users"),
-                eq(HttpMethod.GET),
-                eq(null),
-                any(ParameterizedTypeReference.class)))
-                .thenReturn(responseEntity);
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/users"), eq(HttpMethod.GET), eq(null),
+				any(ParameterizedTypeReference.class))).thenReturn(responseEntity);
 
-        // Call the user service method
-        List<User> result = userService.getAllUsers();
+		// Call the user service method
+		List<User> result = userService.getAllUsers();
 
-        // Assert the result
-        assertEquals(mockUsers.size(), result.size());
-        assertEquals("User 1", result.get(0).getUsername());
-        assertEquals("User 2", result.get(1).getUsername());
-    }
+		// Assert the result
+		assertEquals(mockUsers.size(), result.size());
+		assertEquals("User 1", result.get(0).getUsername());
+		assertEquals("User 2", result.get(1).getUsername());
+	}
 
-    @Test
-    public void testGetUserById() {
-        // Prepare test data
-        Long userId = 1L;
-
-        // Prepare the mock response from the persistence microservice
-        User mockUser = new User(userId, "Test User", "mail@mail.com");
-
-        ResponseEntity<User> responseEntity = new ResponseEntity<>(mockUser, HttpStatus.OK);
-
-        // Mock the HTTP request to the persistence microservice
-        when(restTemplate.exchange(
-                eq(persistenceBaseUrl + "/users/" + userId),
-                eq(HttpMethod.GET),
-                eq(null),
-                eq(User.class)))
-                .thenReturn(responseEntity);
-
-        // Call the user service method
-        User result = userService.getUserById(userId);
-
-        // Assert the result
-        assertEquals("Test User", result.getUsername());
-    }
-
-    @Test
-    public void testAddValidUser() {
-        User newUser = new User(1L, "Test User", "test@example.com");
-
-        // Mock the HTTP request to the persistence microservice
-        when(restTemplate.postForEntity(eq(persistenceBaseUrl + "/users"), eq(newUser), eq(User.class)))
-                .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
-
-        // Call the user service method
-        userService.addUser(newUser);
-
-        // Verify that the restTemplate.postForEntity method was called with the correct parameters
-        verify(restTemplate, times(1)).postForEntity(
-                eq(persistenceBaseUrl + "/users"),
-                eq(newUser),
-                eq(User.class)
-        );
-    }
-
-    @SuppressWarnings("unchecked")
 	@Test
-    public void testAddUserWithEmptyUsername() {
-        User newUser = new User(1L, "", "test@example.com");
+	public void testGetUserById() {
+		// Prepare test data
+		Long userId = 1L;
 
-        // Call the user service method and expect an IllegalArgumentException to be thrown
-        assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+		// Prepare the mock response from the persistence microservice
+		User mockUser = new User(userId, "Test User", "mail@mail.com");
 
-        // Verify that the restTemplate.postForEntity method was not called
-        verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
-    }
+		ResponseEntity<User> responseEntity = new ResponseEntity<>(mockUser, HttpStatus.OK);
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testAddUserWithEmptyEmail() {
-        User newUser = new User(1L, "Test User", "");
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/users/" + userId), eq(HttpMethod.GET), eq(null),
+				eq(User.class))).thenReturn(responseEntity);
 
-        // Call the user service method and expect an IllegalArgumentException to be thrown
-        assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+		// Call the user service method
+		User result = userService.getUserById(userId);
 
-        // Verify that the restTemplate.postForEntity method was not called
-        verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
-    }
+		// Assert the result
+		assertEquals("Test User", result.getUsername());
+	}
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testAddUserWithInvalidEmail() {
-        User newUser = new User(1L, "Test User", "invalid_email");
+	@Test
+	public void testGetNonExistentUserById() {
+		// Prepare test data for a non-existent user ID
+		Long userId = 100L;
 
-        // Call the user service method and expect an IllegalArgumentException to be thrown
-        assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+		// Mock the HTTP request to the persistence microservice with a non-existent
+		// user ID
+		ResponseEntity<User> responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        // Verify that the restTemplate.postForEntity method was not called
-        verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
-    }
+		when(restTemplate.exchange(eq(persistenceBaseUrl + "/users/" + userId), eq(HttpMethod.GET), eq(null),
+				eq(User.class))).thenReturn(responseEntity);
+
+		// Call the user service method and expect it to throw an appropriate exception
+		assertThrows(Exception.class, () -> userService.getUserById(userId));
+	}
+
+	@Test
+	public void testAddValidUser() {
+		User newUser = new User(1L, "Test User", "test@example.com");
+
+		// Mock the HTTP request to the persistence microservice
+		when(restTemplate.postForEntity(eq(persistenceBaseUrl + "/users"), eq(newUser), eq(User.class)))
+				.thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
+
+		// Call the user service method
+		userService.addUser(newUser);
+
+		// Verify that the restTemplate.postForEntity method was called with the correct
+		// parameters
+		verify(restTemplate, times(1)).postForEntity(eq(persistenceBaseUrl + "/users"), eq(newUser), eq(User.class));
+	}
+
+	@Test
+	public void testAddUserBadRequest() {
+		User newUser = new User(1L, "Test User", "test@example.com");
+
+		// Mock the HTTP request to the persistence microservice with an error response
+		// (Bad Request)
+		when(restTemplate.postForEntity(eq(persistenceBaseUrl + "/users"), eq(newUser), eq(User.class)))
+				.thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+		// Call the user service method and expect it to throw an appropriate exception
+		assertThrows(Exception.class, () -> userService.addUser(newUser));
+
+		// Verify that the restTemplate.postForEntity method was called with the correct
+		// parameters
+		verify(restTemplate, times(1)).postForEntity(eq(persistenceBaseUrl + "/users"), eq(newUser), eq(User.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddUserWithEmptyUsername() {
+		User newUser = new User(1L, "", "test@example.com");
+
+		// Call the user service method and expect an IllegalArgumentException to be
+		// thrown
+		assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+
+		// Verify that the restTemplate.postForEntity method was not called
+		verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddUserWithEmptyEmail() {
+		User newUser = new User(1L, "Test User", "");
+
+		// Call the user service method and expect an IllegalArgumentException to be
+		// thrown
+		assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+
+		// Verify that the restTemplate.postForEntity method was not called
+		verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddUserWithInvalidEmail() {
+		User newUser = new User(1L, "Test User", "invalid_email");
+
+		// Call the user service method and expect an IllegalArgumentException to be
+		// thrown
+		assertThrows(ValidationException.class, () -> userService.addUser(newUser));
+
+		// Verify that the restTemplate.postForEntity method was not called
+		verify(restTemplate, never()).postForEntity(any(), any(User.class), any(Class.class));
+	}
 }
