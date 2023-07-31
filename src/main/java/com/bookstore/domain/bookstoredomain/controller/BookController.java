@@ -1,8 +1,10 @@
 package com.bookstore.domain.bookstoredomain.controller;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +27,8 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public ResponseEntity<Object> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/{bookId}")
@@ -35,7 +37,8 @@ public class BookController {
     }
 
     @PostMapping
-    public void addNewBook(@RequestBody Book newBook) {
-        bookService.addBook(newBook);
+    public ResponseEntity<Book> addBook(@Valid @RequestBody Book newBook) {
+        Book createdBook = bookService.addBook(newBook);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
     }
 }

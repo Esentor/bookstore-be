@@ -8,6 +8,18 @@ public class Order {
 	private List<Book> books;
 	private double totalAmount;
 
+	public Order() {
+		super();
+	}
+	
+	public Order(Long id, Long userId, List<Book> books, double totalAmount) {
+		super();
+		this.id = id;
+		this.userId = userId;
+		this.books = books;
+		this.totalAmount = totalAmount;
+	}
+
 	public Long getId() {
 		return id;
 	}

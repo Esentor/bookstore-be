@@ -1,10 +1,32 @@
 package com.bookstore.domain.bookstoredomain.model;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
 public class Book {
+	
 	private Long id;
-	private String title;
-	private String author;
-	private double price;
+	
+    @NotEmpty(message = "Title must not be empty")
+    private String title;
+
+    @NotEmpty(message = "Author must not be empty")
+    private String author;
+
+    @Positive(message = "Price must be a positive value greater than 0")
+    private double price;
+
+	public Book() {
+		super();
+	}
+
+	public Book(Long id, String title, String author, double price) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.price = price;
+	}
 
 	public Long getId() {
 		return id;
