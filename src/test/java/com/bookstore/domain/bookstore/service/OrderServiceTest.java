@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bookstore.domain.bookstore.model.Book;
 import com.bookstore.domain.bookstore.model.Order;
-import com.bookstore.domain.bookstore.service.OrderService;
 
 public class OrderServiceTest {
 

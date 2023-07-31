@@ -24,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 import com.bookstore.domain.bookstore.common.Constants;
 import com.bookstore.domain.bookstore.exception.ValidationException;
 import com.bookstore.domain.bookstore.model.User;
-import com.bookstore.domain.bookstore.service.UserService;
 
 public class UserServiceTest {
 
