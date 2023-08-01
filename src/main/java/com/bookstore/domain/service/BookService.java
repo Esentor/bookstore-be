@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.bookstore.domain.exception.ValidationException;
 import com.bookstore.domain.model.Book;
+import com.bookstore.domain.validators.BookValidator;
 
 @Service
 public class BookService {
@@ -39,29 +39,10 @@ public class BookService {
 	}
 
     public Book addBook(Book newBook) {
-        validateBook(newBook); // Validate the book before making the request
+        BookValidator.validateBook(newBook); // Validate the book before making the request
 
         String url = persistenceBaseUrl + "/books";
         ResponseEntity<Book> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(newBook), Book.class);
         return response.getBody();
     }
-
-    private void validateBook(Book book) {
-        if (book == null) {
-            throw new ValidationException("Book cannot be null");
-        }
-
-        if (book.getTitle() == null || book.getTitle().isEmpty()) {
-            throw new ValidationException("Book title must not be empty");
-        }
-
-        if (book.getAuthor() == null || book.getAuthor().isEmpty()) {
-            throw new ValidationException("Book author must not be empty");
-        }
-
-        if (book.getPrice() <= 0) {
-            throw new ValidationException("Book price must be a positive value greater than 0");
-        }
-    }
-
 }
