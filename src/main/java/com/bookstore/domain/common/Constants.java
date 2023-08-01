@@ -1,4 +1,4 @@
-package com.bookstore.domain.bookstore.common;
+package com.bookstore.domain.common;
 
 public class Constants {
 

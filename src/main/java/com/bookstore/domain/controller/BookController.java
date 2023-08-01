@@ -1,4 +1,4 @@
-package com.bookstore.domain.bookstore.controller;
+package com.bookstore.domain.controller;
 
 import javax.validation.Valid;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.domain.bookstore.model.Book;
-import com.bookstore.domain.bookstore.service.BookService;
+import com.bookstore.domain.model.Book;
+import com.bookstore.domain.service.BookService;
 
 @RestController
 @RequestMapping("bookstore/api/books")

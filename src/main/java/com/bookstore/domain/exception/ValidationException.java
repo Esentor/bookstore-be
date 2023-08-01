@@ -1,4 +1,4 @@
-package com.bookstore.domain.bookstore.exception;
+package com.bookstore.domain.exception;
 
 public class ValidationException extends RuntimeException {
 

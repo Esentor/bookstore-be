@@ -1,4 +1,4 @@
-package com.bookstore.domain.bookstore.model;
+package com.bookstore.domain.model;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

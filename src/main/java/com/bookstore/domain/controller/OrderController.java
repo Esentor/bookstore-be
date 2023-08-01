@@ -1,4 +1,4 @@
-package com.bookstore.domain.bookstore.controller;
+package com.bookstore.domain.controller;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookstore.domain.bookstore.model.Book;
-import com.bookstore.domain.bookstore.model.Order;
-import com.bookstore.domain.bookstore.service.OrderService;
+import com.bookstore.domain.model.Book;
+import com.bookstore.domain.model.Order;
+import com.bookstore.domain.service.OrderService;
 
 @RestController
 @RequestMapping("bookstore/api/orders")

@@ -1,6 +1,6 @@
-package com.bookstore.domain.bookstore.service;
+package com.bookstore.domain.service;
 
-import static com.bookstore.domain.bookstore.common.Constants.PERSISTENCE_BASE_URL;
+import static com.bookstore.domain.common.Constants.PERSISTENCE_BASE_URL;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.bookstore.domain.bookstore.exception.ValidationException;
-import com.bookstore.domain.bookstore.model.User;
+import com.bookstore.domain.exception.ValidationException;
+import com.bookstore.domain.model.User;
 
 @Service
 public class UserService {
