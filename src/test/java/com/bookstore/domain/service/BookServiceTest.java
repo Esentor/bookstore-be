@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bookstore.domain.exception.ValidationException;
 import com.bookstore.domain.model.Book;
-import com.bookstore.domain.service.BookService;
 
 public class BookServiceTest {
 

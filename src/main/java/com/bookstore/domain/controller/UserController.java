@@ -30,13 +30,23 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+		List<User> users = userService.getAllUsers();
+		if (users != null) {
+			return ResponseEntity.ok(users);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable Long userId) {
-        return userService.getUserById(userId);
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+		User user = userService.getUserById(userId);
+		if (user != null) {
+			return ResponseEntity.ok(user);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
     }
 
     @PostMapping

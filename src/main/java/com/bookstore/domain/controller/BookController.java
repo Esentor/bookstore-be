@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookstore.domain.exception.ValidationException;
 import com.bookstore.domain.model.Book;
 import com.bookstore.domain.service.BookService;
 
@@ -32,13 +33,21 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public Book getBookById(@PathVariable Long bookId) {
-        return bookService.getBookById(bookId);
+    public ResponseEntity<Book> getBookById(@PathVariable Long bookId) {
+        Book book = bookService.getBookById(bookId);
+        if (book == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Book> addBook(@Valid @RequestBody Book newBook) {
-        Book createdBook = bookService.addBook(newBook);
-        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+        try {
+        	bookService.addBook(newBook);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
