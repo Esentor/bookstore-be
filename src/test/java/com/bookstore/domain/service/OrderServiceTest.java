@@ -1,6 +1,5 @@
 package com.bookstore.domain.service;
 
-import static com.bookstore.domain.common.Constants.PERSISTENCE_BASE_URL;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,8 @@ import com.bookstore.domain.model.Order;
 
 public class OrderServiceTest {
 
-	private final String persistenceBaseUrl = PERSISTENCE_BASE_URL;
+	@Value("${persistence.base.url}")
+	private String persistenceBaseUrl;
 
 	private RestTemplate restTemplate;
 	private OrderService orderService;

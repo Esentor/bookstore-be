@@ -1,9 +1,8 @@
 package com.bookstore.domain.service;
 
-import static com.bookstore.domain.common.Constants.PERSISTENCE_BASE_URL;
-
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +16,24 @@ import com.bookstore.domain.model.Order;
 public class OrderService {
 
 	private final RestTemplate restTemplate;
-    private final String persistenceBaseUrl = PERSISTENCE_BASE_URL;
+	@Value("${persistence.base.url}")
+	private String persistenceBaseUrl;
 
-    public OrderService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+	public OrderService(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
 
-    public Order createOrder(Long userId, List<Book> selectedBooks) {
-        String url = persistenceBaseUrl + "/orders/" + userId;
-        ResponseEntity<Order> response = restTemplate.postForEntity(url, selectedBooks, Order.class);
-        return response.getBody();
-    }
+	public Order createOrder(Long userId, List<Book> selectedBooks) {
+		String url = persistenceBaseUrl + "/orders/" + userId;
+		ResponseEntity<Order> response = restTemplate.postForEntity(url, selectedBooks, Order.class);
+		return response.getBody();
+	}
 
-    public List<Order> getUserOrders(Long userId) {
-        String url = persistenceBaseUrl + "/orders/user/" + userId;
-        ResponseEntity<List<Order>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Order>>() {});
-        return response.getBody();
-    }
+	public List<Order> getUserOrders(Long userId) {
+		String url = persistenceBaseUrl + "/orders/user/" + userId;
+		ResponseEntity<List<Order>> response = restTemplate.exchange(url, HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<Order>>() {
+				});
+		return response.getBody();
+	}
 }

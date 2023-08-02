@@ -1,9 +1,9 @@
 package com.bookstore.domain.service;
 
-import static com.bookstore.domain.common.Constants.PERSISTENCE_BASE_URL;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,8 @@ import com.bookstore.domain.validators.UserValidator;
 public class UserService {
 
 	private final RestTemplate restTemplate;
-	private final String persistenceBaseUrl = PERSISTENCE_BASE_URL;
+	@Value("${persistence.base.url}")
+	private String persistenceBaseUrl;
 
 	public UserService(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;

@@ -1,6 +1,5 @@
 package com.bookstore.domain.service;
 
-import static com.bookstore.domain.common.Constants.PERSISTENCE_BASE_URL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -32,7 +32,8 @@ import com.bookstore.domain.model.Book;
 
 public class BookServiceTest {
 
-	private final String persistenceBaseUrl = PERSISTENCE_BASE_URL;
+	@Value("${persistence.base.url}")
+	private String persistenceBaseUrl;
 
 	@Mock
 	private RestTemplate restTemplate;
